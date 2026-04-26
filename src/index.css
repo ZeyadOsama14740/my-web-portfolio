@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Montserrat', system-ui, sans-serif;
+  background: #090b11;
+}
+
+@layer components {
+  .section-heading {
+    @apply text-3xl font-semibold text-white md:text-4xl;
+  }
+
+  .input-ui {
+    @apply w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-slate-100 placeholder:text-slate-400 outline-none transition focus:border-accent;
+  }
+}
+
+.masonry-layout {
+  column-count: 1;
+  column-gap: 1.25rem;
+}
+
+.masonry-item {
+  break-inside: avoid;
+}
+
+@media (min-width: 768px) {
+  .masonry-layout {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry-layout {
+    column-count: 3;
+  }
+}
