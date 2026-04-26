@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
 import {
   FiActivity,
   FiArrowRight,
@@ -188,6 +188,14 @@ function App() {
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], [0, -120])
   const profileImage = '/profile-zeyad.png'
+  const profileTiltX = useMotionValue(0)
+  const profileTiltY = useMotionValue(0)
+  const profileShiftX = useMotionValue(0)
+  const profileShiftY = useMotionValue(0)
+  const springTiltX = useSpring(profileTiltX, { stiffness: 180, damping: 20, mass: 0.45 })
+  const springTiltY = useSpring(profileTiltY, { stiffness: 180, damping: 20, mass: 0.45 })
+  const springShiftX = useSpring(profileShiftX, { stiffness: 170, damping: 22, mass: 0.45 })
+  const springShiftY = useSpring(profileShiftY, { stiffness: 170, damping: 22, mass: 0.45 })
 
   const socialLinks = useMemo(
     () => [
@@ -234,6 +242,24 @@ function App() {
 
     setFormFeedback({ type: 'success', text: 'Your email app opened with your message ready to send.' })
     setContactForm({ name: '', email: '', message: '' })
+  }
+
+  const handleProfileMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const pointerX = (e.clientX - rect.left) / rect.width - 0.5
+    const pointerY = (e.clientY - rect.top) / rect.height - 0.5
+
+    profileTiltY.set(pointerX * 16)
+    profileTiltX.set(-pointerY * 16)
+    profileShiftX.set(pointerX * 10)
+    profileShiftY.set(pointerY * 10)
+  }
+
+  const handleProfileMouseLeave = () => {
+    profileTiltX.set(0)
+    profileTiltY.set(0)
+    profileShiftX.set(0)
+    profileShiftY.set(0)
   }
 
   return (
@@ -295,15 +321,19 @@ function App() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
           className="relative mx-auto w-full max-w-xs sm:max-w-sm lg:mx-0"
+          onMouseMove={handleProfileMouseMove}
+          onMouseLeave={handleProfileMouseLeave}
         >
           <motion.div
             animate={{ y: [0, -10, 0], rotate: [0, 1.4, 0, -1.4, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ rotateX: springTiltX, rotateY: springTiltY, transformPerspective: 900 }}
             className="relative mx-auto h-72 w-72 rounded-full border border-accent/40 bg-gradient-to-b from-accent/15 via-slate-900/50 to-slate-950/70 p-2 shadow-[0_0_55px_rgba(68,240,255,0.25)] sm:h-80 sm:w-80 md:h-96 md:w-96"
           >
-            <img
+            <motion.img
               src={profileImage}
               alt="Zeyad Osama portrait"
+              style={{ x: springShiftX, y: springShiftY }}
               className="h-full w-full rounded-full object-cover object-top"
             />
             <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/10" />
