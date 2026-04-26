@@ -278,7 +278,7 @@ function App() {
             transition={{ delay: 0.12 }}
             className="mt-3 max-w-4xl text-4xl font-semibold leading-tight text-white md:text-7xl"
           >
-            Graphic Designer &amp; Media Manager.
+            Graphic Designer &amp; Social Media Manager.
           </motion.h1>
           <motion.p
             variants={fadeUp}
