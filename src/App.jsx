@@ -183,6 +183,8 @@ function Counter({ to, suffix }) {
 
 function App() {
   const [selectedProject, setSelectedProject] = useState(null)
+  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' })
+  const [formFeedback, setFormFeedback] = useState({ type: '', text: '' })
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], [0, -120])
   const profileImage = '/profile-zeyad.png'
@@ -203,6 +205,36 @@ function App() {
     window.addEventListener('keydown', closeOnEsc)
     return () => window.removeEventListener('keydown', closeOnEsc)
   }, [])
+
+  const handleContactChange = (e) => {
+    const { name, value } = e.target
+    setContactForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault()
+    const name = contactForm.name.trim()
+    const email = contactForm.email.trim()
+    const message = contactForm.message.trim()
+
+    if (!name || !email || !message) {
+      setFormFeedback({ type: 'error', text: 'Please fill in your name, email, and message.' })
+      return
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailPattern.test(email)) {
+      setFormFeedback({ type: 'error', text: 'Please enter a valid email address.' })
+      return
+    }
+
+    const subject = encodeURIComponent(`Portfolio contact from ${name}`)
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)
+    window.location.href = `mailto:zeyadosama14740@gmail.com?subject=${subject}&body=${body}`
+
+    setFormFeedback({ type: 'success', text: 'Your email app opened with your message ready to send.' })
+    setContactForm({ name: '', email: '', message: '' })
+  }
 
   return (
     <main className="relative overflow-x-hidden bg-bg text-slate-300">
@@ -418,14 +450,40 @@ function App() {
       <section id="contact" className="relative mx-auto max-w-6xl px-6 pb-10 pt-20 md:px-10">
         <h2 className="section-heading">Contact</h2>
         <div className="mt-10 grid gap-8 md:grid-cols-[1.2fr_0.8fr]">
-          <form className="rounded-2xl border border-slate-800 bg-card/65 p-6">
+          <form onSubmit={handleContactSubmit} className="rounded-2xl border border-slate-800 bg-card/65 p-6">
             <div className="grid gap-4">
-              <input type="text" placeholder="Your Name" className="input-ui" />
-              <input type="email" placeholder="Your Email" className="input-ui" />
-              <textarea rows="5" placeholder="Tell me about your project..." className="input-ui resize-none" />
+              <input
+                type="text"
+                name="name"
+                value={contactForm.name}
+                onChange={handleContactChange}
+                placeholder="Your Name"
+                className="input-ui"
+              />
+              <input
+                type="email"
+                name="email"
+                value={contactForm.email}
+                onChange={handleContactChange}
+                placeholder="Your Email"
+                className="input-ui"
+              />
+              <textarea
+                rows="5"
+                name="message"
+                value={contactForm.message}
+                onChange={handleContactChange}
+                placeholder="Tell me about your project..."
+                className="input-ui resize-none"
+              />
               <button type="submit" className="inline-flex items-center justify-center rounded-xl bg-accent px-5 py-3 font-semibold text-slate-900 transition hover:shadow-glow">
                 Send Message
               </button>
+              {formFeedback.text && (
+                <p className={`text-sm ${formFeedback.type === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+                  {formFeedback.text}
+                </p>
+              )}
             </div>
           </form>
           <div className="rounded-2xl border border-slate-800 bg-card/40 p-6">
