@@ -320,7 +320,7 @@ function App() {
           initial={{ opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="relative mx-auto w-full max-w-xs sm:max-w-sm lg:mx-0"
+          className="relative isolate mx-auto w-full max-w-xs sm:max-w-sm lg:mx-0"
           onMouseMove={handleProfileMouseMove}
           onMouseLeave={handleProfileMouseLeave}
         >
@@ -328,7 +328,7 @@ function App() {
             animate={{ y: [0, -10, 0], rotate: [0, 1.4, 0, -1.4, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
             style={{ rotateX: springTiltX, rotateY: springTiltY, transformPerspective: 900 }}
-            className="relative mx-auto h-72 w-72 rounded-full border border-accent/40 bg-gradient-to-b from-accent/15 via-slate-900/50 to-slate-950/70 p-2 shadow-[0_0_55px_rgba(68,240,255,0.25)] sm:h-80 sm:w-80 md:h-96 md:w-96"
+            className="relative z-10 mx-auto h-72 w-72 rounded-full border border-accent/40 bg-gradient-to-b from-accent/15 via-slate-900/50 to-slate-950/70 p-2 shadow-[0_0_55px_rgba(68,240,255,0.25)] sm:h-80 sm:w-80 md:h-96 md:w-96"
           >
             <motion.img
               src={profileImage}
@@ -341,12 +341,12 @@ function App() {
           <motion.div
             animate={{ scale: [1, 1.08, 1], opacity: [0.35, 0.5, 0.35] }}
             transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="pointer-events-none absolute inset-4 -z-10 rounded-full bg-accent/20 blur-2xl"
+            className="pointer-events-none absolute inset-3 z-0 rounded-full bg-accent/20 blur-2xl"
           />
           <motion.div
             animate={{ rotate: [0, 360] }}
             transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="pointer-events-none absolute inset-0 -z-10 rounded-full border border-dashed border-accent/30"
+            className="pointer-events-none absolute -inset-3 z-0 rounded-full border border-dashed border-accent/50"
           />
         </motion.div>
       </motion.section>
